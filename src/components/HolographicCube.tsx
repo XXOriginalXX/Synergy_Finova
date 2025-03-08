@@ -26,18 +26,20 @@ const GradientMaterial = () => {
 };
 
 const RotatingCube = () => {
-  const cubeRef = useRef();
+  const cubeRef = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     if (cubeRef.current) {
-      cubeRef.current.rotation.x += 0.005; // Slower X-axis rotation
-      cubeRef.current.rotation.y += 0.005; // Slower Y-axis rotation
+      cubeRef.current.rotation.x += 0.005;
+      cubeRef.current.rotation.y += 0.005;
     }
   });
 
+  const material = GradientMaterial();
+
   return (
     <Box ref={cubeRef} args={[2, 2, 2]}>
-      <primitive attach="material" object={GradientMaterial()} />
+      <primitive attach="material" object={material} />
     </Box>
   );
 };
@@ -45,13 +47,13 @@ const RotatingCube = () => {
 const HolographicCube = () => {
   return (
     <div className="w-full h-[400px]">
-      <Canvas camera={{ position: [0, 0, 4] }}>
+      <Canvas
+        camera={{ position: [0, 0, 4] }}
+        gl={{ antialias: true, alpha: true }}
+      >
         <ambientLight intensity={1.5} />
         <pointLight position={[5, 5, 5]} intensity={2} />
-
-        {/* Rotating Cube with Gradient */}
         <RotatingCube />
-
         <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
       </Canvas>
     </div>
